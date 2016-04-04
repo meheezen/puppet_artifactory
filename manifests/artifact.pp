@@ -107,6 +107,7 @@ define artifactory::artifact(
   } else {
     exec { "Download ${gav}-${classifier} to ${output}":
       command => $cmd,
+      creates => $output,
       require => File[ "${artifactory::installdir}/${artifactory::downloadscript}" ],
     }
   }
