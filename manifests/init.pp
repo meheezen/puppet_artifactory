@@ -28,7 +28,7 @@ class artifactory(
   if $url == '' {
     fail('Cannot initialize the Artifactory class - the url parameter is mandatory')
   }
-  $ARTIFACTORY_URL = $url
+  $artifactory_url = $url
 
   if ($username != '') and ($password == '') {
     fail('Cannot initialize the Artifactory class - both username and password must be set')
@@ -58,7 +58,7 @@ class artifactory(
     ensure  => file,
     mode    => '0755',
     source  => "puppet:///modules/artifactory/${downloadscript}",
-    require => File ["${installdir}"]
+    require => File[$installdir],
   }
 
   # Install compare script
@@ -66,11 +66,11 @@ class artifactory(
     ensure  => file,
     mode    => '0755',
     source  => "puppet:///modules/artifactory/${comparescript}",
-    require => File ["${installdir}"]
+    require => File[$installdir],
   }
 
-  file { "${$installdir}":
-    ensure  => directory
+  file { $installdir:
+    ensure  => directory,
   }
 
 }

@@ -47,7 +47,7 @@ define artifactory::artifact(
   $ensure = update,
   $gav,
   $packaging = 'jar',
-  $classifier = '',
+  $classifier = undef,
   $repository = '',
   $output = $name,
   $timestamped = false)
@@ -74,7 +74,7 @@ define artifactory::artifact(
     $timestampedRepo = "-t"
   }
 
-  $cmdargs = "-a ${gav} -e ${packaging} ${includeClass} -n ${artifactory::ARTIFACTORY_URL} ${includeRepo} ${timestampedRepo} -o ${output} ${args} -v"
+  $cmdargs = "-a ${gav} -e ${packaging} ${includeClass} -v -n ${artifactory::artifactory_url} ${includeRepo} ${timestampedRepo} -o ${output} ${args}"
 
   if $::operatingsystem == 'windows' {
     Exec { path => ['C:/Windows/System32', 'C:/Windows/System32/WindowsPowerShell/v1.0'], }
@@ -94,7 +94,7 @@ define artifactory::artifact(
     exec { "Download ${gav}-${classifier} to ${output}":
       command => $cmd,
       unless  => $unlesscmd,
-      require => File [
+      require => File[
           "${artifactory::installdir}/${artifactory::comparescript}",
           "${artifactory::installdir}/${artifactory::downloadscript}"
       ],
@@ -107,7 +107,7 @@ define artifactory::artifact(
   } else {
     exec { "Download ${gav}-${classifier} to ${output}":
       command => $cmd,
-      require => File [ "${artifactory::installdir}/${artifactory::downloadscript}" ],
+      require => File[ "${artifactory::installdir}/${artifactory::downloadscript}" ],
     }
   }
 }
