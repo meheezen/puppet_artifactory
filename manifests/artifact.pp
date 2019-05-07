@@ -93,6 +93,7 @@ define artifactory::artifact(
   if $ensure == present {
     exec { "Download ${gav}-${classifier} to ${output}":
       command => $cmd,
+      timeout => 900,
       unless  => $unlesscmd,
       require => File[
           "${artifactory::installdir}/${artifactory::comparescript}",
@@ -108,6 +109,7 @@ define artifactory::artifact(
     exec { "Download ${gav}-${classifier} to ${output}":
       command => $cmd,
       creates => $output,
+      timeout => 900,
       require => File[ "${artifactory::installdir}/${artifactory::downloadscript}" ],
     }
   }
